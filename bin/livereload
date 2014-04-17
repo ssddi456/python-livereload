@@ -15,6 +15,14 @@ def main():
         default=35729
     )
     parser.add_argument(
+        '-i', '--ignore',
+        help='files to ignore(by ext)',
+        dest="ignore_list",
+        type=str,
+        default=[],
+        action='append'
+    )
+    parser.add_argument(
         'directory',
         help='Directory to watch for changes',
         type=str,
@@ -24,7 +32,7 @@ def main():
     args = parser.parse_args()
 
     # Create a new application
-    server = Server()
+    server = Server(ignore_list=args.ignore_list)
     server.serve(port=args.port, root=args.directory)
 
 if __name__ == '__main__':

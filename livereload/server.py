@@ -32,9 +32,7 @@ def shell(command, output=None, mode='w'):
 
     You can add a shell command::
 
-        server.watch(
-            'style.less', shell('lessc style.less', output='style.css')
-        )
+        server.watch('style.less', shell('lessc style.less', output='style.css'))
 
     :param command: a shell command, string or list
     :param output: output stdout to the given file
@@ -52,6 +50,7 @@ def shell(command, output=None, mode='w'):
         cmd = command
     else:
         cmd = command.split()
+
 
     def run_shell():
         try:
@@ -140,12 +139,12 @@ class Server(object):
                     pyinotify and use INotifyWatcher() to avoid wasted
                     CPU usage.
     """
-    def __init__(self, app=None, watcher=None):
+    def __init__(self, app=None, watcher=None, ignore_list=[]):
         self.app = app
         self.port = 5500
         self.root = None
         if not watcher:
-            watcher = Watcher()
+            watcher = Watcher(ignore_list=ignore_list)
         self.watcher = watcher
 
     def watch(self, filepath, func=None):

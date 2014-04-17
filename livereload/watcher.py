@@ -15,18 +15,19 @@ import time
 
 class Watcher(object):
     """A file watcher registery."""
-    def __init__(self):
+    def __init__(self, ignore_list=[]):
         self._tasks = {}
         self._mtimes = {}
 
         # filepath that is changed
         self.filepath = None
+        self.ignore_list = ['.pyc', '.pyo', '.o', '.swp'] + ignore_list
         self._start = time.time()
 
     def ignore(self, filename):
         """Ignore a given filename or not."""
         _, ext = os.path.splitext(filename)
-        return ext in ['.pyc', '.pyo', '.o', '.swp']
+        return ext in self.ignore_list
 
     def watch(self, path, func=None):
         """Add a task to watcher."""
@@ -89,8 +90,10 @@ class Watcher(object):
                 dirs.remove('.cvs')
 
             for f in files:
+
                 if self.is_file_changed(os.path.join(root, f)):
                     return True
+
         return False
 
     def is_glob_changed(self, path):
